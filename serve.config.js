@@ -1,7 +1,11 @@
 const path = require('path');
 
-const options = {
+const config = {
   content: path.join(__dirname, 'src'),
+  hot: {
+    hot: true,
+  },
+  open: true,
 };
 
-module.exports = options;
+module.exports = config;
