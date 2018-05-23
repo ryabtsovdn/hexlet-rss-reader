@@ -49,11 +49,14 @@ const renderFeed = (feed) => {
 };
 
 const addFeed = (state, link, guid, title, description) => {
-  const feed = _.find(state.feeds, { link });
-  feed.guid = guid;
-  feed.title = title;
-  feed.description = description;
-  feed.items = [];
+  const feed = {
+    link,
+    guid,
+    title,
+    description,
+    items: [],
+  };
+  state.feeds.push(feed);
   renderFeed(feed);
 };
 
@@ -71,41 +74,33 @@ const renderItem = (feed, item) => {
   const cardBody = document.createElement('div');
   cardBody.classList.add('card-body');
   card.appendChild(cardBody);
-  const cardTitle = document.createElement('h5');
+  const cardTitle = document.createElement('a');
   cardTitle.classList.add('card-title');
-  cardTitle.innerHTML = title;
+  cardTitle.innerText = title;
+  cardTitle.setAttribute('href', link);
+  cardTitle.setAttribute('target', '_blank');
+  cardTitle.style.fontSize = 'large';
   cardBody.appendChild(cardTitle);
-  const cardDescription = document.createElement('div');
-  cardDescription.classList.add('card-text');
-  cardDescription.innerHTML = cleanDescription(description);
-  cardBody.appendChild(cardDescription);
-  const cardButton = document.createElement('a');
-  cardButton.classList.add('btn');
-  cardButton.classList.add('btn-primary');
-  cardButton.innerText = 'Read more...';
-  cardButton.setAttribute('href', link);
-  cardButton.setAttribute('target', '_blank');
-  cardBody.appendChild(cardButton);
   pane.appendChild(card);
 };
 
-const addItem = (feed, item) => {
-  const title = getProp(item, 'title');
-  const description = getProp(item, 'description');
-  const link = getProp(item, 'link');
+const addItem = (feed, feedItem) => {
+  const title = getProp(feedItem, 'title');
+  const description = getProp(feedItem, 'description');
+  const link = getProp(feedItem, 'link');
   const guid = hashString(link);
   const { items } = feed;
   if (_.find(items, { guid })) {
     return;
   }
-  const stateItem = {
+  const item = {
     link,
     guid,
     title,
-    description,
+    description: cleanDescription(description),
   };
-  items.push(stateItem);
-  renderItem(feed, stateItem);
+  items.push(item);
+  renderItem(feed, item);
 };
 
 const updateFeed = (state, guid, items) => {

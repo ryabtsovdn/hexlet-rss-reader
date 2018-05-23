@@ -37,9 +37,10 @@ export default (state) => {
     }
 
     const feedAddress = feedInput.value;
-    state.feeds.push({ link: feedAddress });
+    // state.feeds.push({ link: feedAddress });
     loadRSS(state, feedAddress);
     feedInput.value = '';
+    state.input.isValid = false;
   };
 
   feedInput.addEventListener('input', validateInput);
