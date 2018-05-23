@@ -14,8 +14,11 @@ export default (state) => {
       return;
     }
     if (isURL(address)) {
-      const isAdded = _.find(state.feeds, item => item.link === address);
-      if (!isAdded) {
+      const isAdded = _.find(state.feeds, { link: address });
+      if (isAdded) {
+        state.input.isValid = false;
+        target.classList.add('is-invalid');
+      } else {
         state.input.isValid = true;
         target.classList.remove('is-invalid');
       }
