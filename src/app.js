@@ -1,8 +1,8 @@
 import { isURL } from 'validator';
 import loadRSS from './rss';
+import _ from 'lodash';
 
-export default (arg) => {
-  const state = arg;
+export default (state) => {
   const feedInput = document.getElementById('feedInput');
   const addButton = document.getElementById('addRSS');
 
@@ -14,7 +14,7 @@ export default (arg) => {
       return;
     }
     if (isURL(address)) {
-      const isAdded = state.feeds.has(address);
+      const isAdded = _.find(state.feeds, item => item.link === address);
       if (!isAdded) {
         state.input.isValid = true;
         target.classList.remove('is-invalid');
@@ -32,10 +32,10 @@ export default (arg) => {
     if (!state.input.isValid) {
       return;
     }
+
     const feedAddress = feedInput.value;
-    state.feeds.add(feedAddress);
-    /** */console.log(`loadRSS from ${feedAddress}`);
-    loadRSS.bind(state, feedAddress)();
+    state.feeds.push({ link: feedAddress });
+    loadRSS(state, feedAddress);
     feedInput.value = '';
   };
 

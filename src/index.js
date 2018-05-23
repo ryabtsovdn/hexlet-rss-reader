@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import run from './app';
 
 const state = {
-  feeds: new Set(),
+  feeds: [],
   input: {
     isValid: false,
   },

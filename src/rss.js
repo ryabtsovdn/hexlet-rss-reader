@@ -1,5 +1,6 @@
 import axios from 'axios';
 import hashString from 'string-hash';
+import _ from 'lodash';
 
 const replaceCDATA = str =>
   str.replace('<![CDATA[', '').replace(']]>', '');
@@ -16,7 +17,8 @@ const cleanDescription = str =>
 const getProp = (element, prop) =>
   replaceCDATA(element.querySelector(prop).innerHTML);
 
-const addFeed = (guid, title, description) => {
+const renderFeed = (feed) => {
+  const { guid, title, description } = feed;
   const rootTab = document.querySelector('#v-pills-tab');
   const rootPane = document.querySelector('#v-pills-tabContent');
   const isEmptyList = rootTab.children.length === 0;
@@ -46,54 +48,94 @@ const addFeed = (guid, title, description) => {
   rootPane.appendChild(pane);
 };
 
-const addItems = (guid, items) => {
-  const pane = document.getElementById(guid);
+const addFeed = (state, link, guid, title, description) => {
+  const feed = _.find(state.feeds, { link });
+  feed.guid = guid;
+  feed.title = title;
+  feed.description = description;
+  feed.items = [];
+  renderFeed(feed);
+};
+
+const renderItem = (feed, item) => {
+  const pane = document.getElementById(feed.guid);
+  const {
+    link,
+    guid,
+    title,
+    description,
+  } = item;
+  const card = document.createElement('div');
+  card.classList.add('card');
+  card.setAttribute('id', guid);
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+  card.appendChild(cardBody);
+  const cardTitle = document.createElement('h5');
+  cardTitle.classList.add('card-title');
+  cardTitle.innerHTML = title;
+  cardBody.appendChild(cardTitle);
+  const cardDescription = document.createElement('div');
+  cardDescription.classList.add('card-text');
+  cardDescription.innerHTML = cleanDescription(description);
+  cardBody.appendChild(cardDescription);
+  const cardButton = document.createElement('a');
+  cardButton.classList.add('btn');
+  cardButton.classList.add('btn-primary');
+  cardButton.innerText = 'Read more...';
+  cardButton.setAttribute('href', link);
+  cardButton.setAttribute('target', '_blank');
+  cardBody.appendChild(cardButton);
+  pane.appendChild(card);
+};
+
+const addItem = (feed, item) => {
+  const title = getProp(item, 'title');
+  const description = getProp(item, 'description');
+  const link = getProp(item, 'link');
+  const guid = hashString(link);
+  const { items } = feed;
+  if (_.find(items, { guid })) {
+    return;
+  }
+  const stateItem = {
+    link,
+    guid,
+    title,
+    description,
+  };
+  items.push(stateItem);
+  renderItem(feed, stateItem);
+};
+
+const updateFeed = (state, guid, items) => {
+  const feed = _.find(state.feeds, { guid });
   items.forEach((item) => {
-    const itemTitle = getProp(item, 'title');
-    const itemDescription = getProp(item, 'description');
-    const itemLink = getProp(item, 'link');
-    const card = document.createElement('div');
-    card.classList.add('card');
-    const cardBody = document.createElement('div');
-    cardBody.classList.add('card-body');
-    card.appendChild(cardBody);
-    const cardTitle = document.createElement('h5');
-    cardTitle.classList.add('card-title');
-    cardTitle.innerHTML = itemTitle;
-    cardBody.appendChild(cardTitle);
-    const cardDescription = document.createElement('div');
-    cardDescription.classList.add('card-text');
-    cardDescription.innerHTML = cleanDescription(itemDescription);
-    cardBody.appendChild(cardDescription);
-    const cardButton = document.createElement('a');
-    cardButton.classList.add('btn');
-    cardButton.classList.add('btn-primary');
-    cardButton.innerText = 'Read more...';
-    cardButton.setAttribute('href', itemLink);
-    cardButton.setAttribute('target', '_blank');
-    cardBody.appendChild(cardButton);
-    pane.appendChild(card);
+    addItem(feed, item);
   });
 };
 
-function loadRSS(url) {
+const loadRSS = (state, url) => {
   axios.get(`https://cors-proxy.htmldriven.com/?url=${url}`)
     .then((response) => {
       const parser = new DOMParser();
       const xml = parser.parseFromString(response.data.body, 'text/xml');
 
       const feed = xml.querySelector('channel');
-      const feedGuid = hashString(getProp(feed, 'link'));
+      const feedLink = url;
+      const feedGuid = hashString(url);
       const feedTitle = getProp(feed, 'title');
       const feedDescription = getProp(feed, 'description');
-      addFeed(feedGuid, feedTitle, feedDescription);
-      addItems(feedGuid, [...xml.querySelectorAll('item')]);
-      /** */console.log(feed);
-      /** */console.log(this);
+      addFeed(state, feedLink, feedGuid, feedTitle, feedDescription);
+      return [feed, feedGuid];
+    })
+    .then(([feed, feedGuid]) => {
+      updateFeed(state, feedGuid, [...feed.querySelectorAll('item')]);
+      /** */console.log(state);
     })
     .catch((err) => {
       console.log(err.message);
     });
-}
+};
 
 export default loadRSS;
