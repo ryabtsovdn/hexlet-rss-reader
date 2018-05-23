@@ -93,6 +93,7 @@ const renderItem = (feed, item) => {
   modal.setAttribute('aria-hidden', true);
   const modalDialog = document.createElement('div');
   modalDialog.classList.add('modal-dialog');
+  modalDialog.classList.add('modal-lg');
   modalDialog.setAttribute('role', 'document');
   modal.appendChild(modalDialog);
   const modalContent = document.createElement('div');
@@ -123,6 +124,13 @@ const renderItem = (feed, item) => {
   const modalFooter = document.createElement('div');
   modalFooter.classList.add('modal-footer');
   modalContent.appendChild(modalFooter);
+  const modalReadMoreButton = document.createElement('button');
+  modalReadMoreButton.classList.add('btn');
+  modalReadMoreButton.classList.add('btn-primary');
+  modalReadMoreButton.setAttribute('type', 'button');
+  modalReadMoreButton.innerHTML = 'Read more';
+  modalReadMoreButton.addEventListener('click', () => window.open(link, '_blank'));
+  modalFooter.appendChild(modalReadMoreButton);
   const modalCloseButton = document.createElement('button');
   modalCloseButton.classList.add('btn');
   modalCloseButton.classList.add('btn-secondary');
@@ -130,12 +138,9 @@ const renderItem = (feed, item) => {
   modalCloseButton.setAttribute('data-dismiss', 'modal');
   modalCloseButton.innerText = 'Close';
   modalFooter.appendChild(modalCloseButton);
-  cardTitle.appendChild(modal);
   cardBody.appendChild(cardTitle);
+  cardBody.appendChild(modal);
   pane.appendChild(card);
-
-  const images = modal.querySelectorAll('img');
-  [...images].forEach(image => image.setAttribute('width', '100%'));
 };
 
 const addItem = (feed, feedItem) => {

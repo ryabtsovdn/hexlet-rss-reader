@@ -1,8 +1,9 @@
+import _ from 'lodash';
 import { isURL } from 'validator';
 import loadRSS from './rss';
-import _ from 'lodash';
 
-export default (state) => {
+export default (_state) => {
+  const state = _state;
   const feedInput = document.getElementById('feedInput');
   const addButton = document.getElementById('addRSS');
 
