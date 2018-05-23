@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { isURL } from 'validator';
-import loadRSS from './rss';
+import loadFeed from './rss';
 
 export default (_state) => {
   const state = _state;
@@ -38,8 +38,7 @@ export default (_state) => {
     }
 
     const feedAddress = feedInput.value;
-    // state.feeds.push({ link: feedAddress });
-    loadRSS(state, feedAddress);
+    loadFeed(state, feedAddress);
     feedInput.value = '';
     state.input.isValid = false;
   };
