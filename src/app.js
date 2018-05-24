@@ -4,45 +4,44 @@ import loadFeed from './rss';
 
 export default (_state) => {
   const state = _state;
-  const feedInput = document.getElementById('feedInput');
+  const input = document.getElementById('feedInput');
   const addButton = document.getElementById('addRSS');
 
-  const validateInput = ({ target }) => {
-    const address = target.value;
-    if (address === '') {
-      state.isValidAddress = false;
+  const isURLValid = (url) => {
+    const isAdded = _.find(state.feeds, { link: url });
+    if (url === '' || isAdded || !isURL(url)) {
+      return false;
+    }
+    return true;
+  };
+
+  const handleValidateInput = ({ target }) => {
+    const url = target.value;
+    if (isURLValid(url)) {
+      state.isValidURL = true;
       target.classList.remove('is-invalid');
-      return;
-    }
-    if (isURL(address)) {
-      const isAdded = _.find(state.feeds, { link: address });
-      if (isAdded) {
-        state.isValidAddress = false;
-        target.classList.add('is-invalid');
-      } else {
-        state.isValidAddress = true;
-        target.classList.remove('is-invalid');
-      }
     } else {
-      state.isValidAddress = false;
-      target.classList.add('is-invalid');
+      state.isValidURL = false;
+      if (url === '') {
+        target.classList.remove('is-invalid');
+      } else {
+        target.classList.add('is-invalid');
+      }
     }
   };
 
-  const addRSS = (event) => {
+  const handleAddRSS = (event) => {
     event.preventDefault();
-    feedInput.focus();
+    input.focus();
 
-    if (!state.isValidAddress) {
-      return;
+    if (state.isValidURL) {
+      const feedURL = input.value;
+      loadFeed(state, feedURL);
+      input.value = '';
+      state.isValidURL = false;
     }
-
-    const feedAddress = feedInput.value;
-    loadFeed(state, feedAddress);
-    feedInput.value = '';
-    state.isValidAddress = false;
   };
 
-  feedInput.addEventListener('input', validateInput);
-  addButton.addEventListener('click', addRSS);
+  input.addEventListener('input', handleValidateInput);
+  addButton.addEventListener('click', handleAddRSS);
 };

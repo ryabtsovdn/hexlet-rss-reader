@@ -3,6 +3,7 @@ import hashString from 'string-hash';
 import _ from 'lodash';
 import { renderFeed, renderItem } from './renderers';
 import { cleanDescription, getProp } from './utils';
+import parser from './parsers';
 
 const addItem = (feed, feedItem) => {
   const title = getProp(feedItem, 'title');
@@ -40,14 +41,12 @@ const addFeed = (state, feedChannel, link) => {
   return feed;
 };
 
-const parser = new DOMParser();
-
 const updateFeed = (feed) => {
   const { link } = feed;
   axios.get(`https://cors-proxy.htmldriven.com/?url=${link}`)
     .then((response) => {
-      const xml = parser.parseFromString(response.data.body, 'text/xml');
-      const items = [...xml.querySelector('channel').querySelectorAll('item')];
+      const channel = parser(response);
+      const items = [...channel.querySelectorAll('item')];
       items.forEach((item) => {
         addItem(feed, item);
       });
@@ -58,8 +57,7 @@ const updateFeed = (feed) => {
 const loadFeed = (state, url) => {
   axios.get(`https://cors-proxy.htmldriven.com/?url=${url}`)
     .then((response) => {
-      const xml = parser.parseFromString(response.data.body, 'text/xml');
-      const channel = xml.querySelector('channel');
+      const channel = parser(response);
       return addFeed(state, channel, url);
     })
     .then(feed => updateFeed(feed))

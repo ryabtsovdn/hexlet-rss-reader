@@ -4,7 +4,7 @@ import run from './app';
 
 const state = {
   feeds: [],
-  isValidAddress: false,
+  isValidURL: false,
 };
 
 run(state);
