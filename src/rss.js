@@ -1,9 +1,9 @@
 import axios from 'axios';
 import hashString from 'string-hash';
 import _ from 'lodash';
-import { renderFeed, renderItem } from './renderers';
+import { renderFeed, renderItem, renderError } from './renderers';
 import { cleanDescription, getProp } from './utils';
-import parser from './parsers';
+import parse from './parsers';
 
 const addItem = (feed, feedItem) => {
   const title = getProp(feedItem, 'title');
@@ -45,7 +45,7 @@ const updateFeed = (feed) => {
   const { link } = feed;
   axios.get(`https://cors-proxy.htmldriven.com/?url=${link}`)
     .then((response) => {
-      const channel = parser(response);
+      const channel = parse(response);
       const items = [...channel.querySelectorAll('item')];
       items.forEach((item) => {
         addItem(feed, item);
@@ -57,12 +57,12 @@ const updateFeed = (feed) => {
 const loadFeed = (state, url) => {
   axios.get(`https://cors-proxy.htmldriven.com/?url=${url}`)
     .then((response) => {
-      const channel = parser(response);
+      const channel = parse(response);
       return addFeed(state, channel, url);
     })
     .then(feed => updateFeed(feed))
-    .catch((err) => {
-      console.log(err.message);
+    .catch(() => {
+      renderError();
     });
 };
 

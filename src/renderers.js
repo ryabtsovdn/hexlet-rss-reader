@@ -19,4 +19,17 @@ export const renderItem = (feed, item) => {
   pane.innerHTML = `${pane.innerHTML}<div class="card" id="${guid}"><div class="card-body"><a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" style="font-size: large;">${title}</a><div class="modal fade" id="${guid}modal" tabindex="-1" role="dialog" aria-labelledby="${guid}modalLabel" aria-hidden="true"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="${guid}modalLabel">${title}</h5><button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body">${description}</div><div class="modal-footer"><button class="btn btn-primary" type="button" onclick="window.open('${link}', '_blank'); return false;">Read more</button><button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button></div></div></div></div></div></div>`;
 };
 
+export const renderError = () => {
+  /** */console.log('error');
+  const errorMessage = document.createElement('div');
+  errorMessage.innerHTML = `<div class="alert alert-warning alert-dismissible fade show" style="position: fixed; bottom: 5px; right:2%; width: 56%;" role="alert">
+  <strong>Unable to add this RSS feed!</strong> Please, check feed address or internet connection.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>`;
+  document.body.append(errorMessage);
+  window.setTimeout(() => errorMessage.parentNode.removeChild(errorMessage), 5000);
+};
+
 export default renderFeed;
