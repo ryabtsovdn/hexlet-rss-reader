@@ -24,19 +24,29 @@
     <main role="main" class="container">
       <div class="jumbotron">
         <h1 class="text-center">Add RSS source upthere and click READ button</h1>
-        <p class="lead">
+        <div class="lead">
           <ul>
-            RSS feeds for testing:
-            <li>http://lorem-rss.herokuapp.com/feed?unit=second&interval=30</li>
-            <li>http://rss.cnn.com/rss/cnn_topstories.rss</li>
-            <li>http://feeds.bbci.co.uk/news/video_and_audio/world/rss.xml</li>
-            <li>https://xkcd.com/rss.xml</li>
+            RSS feeds for testing (CLICK to ADD):
+            <li><a href="#" class="test">http://lorem-rss.herokuapp.com/feed?unit=second&interval=30</a></li>
+            <li><a href="#" class="test">http://rss.cnn.com/rss/cnn_topstories.rss</a></li>
+            <li><a href="#" class="test">http://feeds.bbci.co.uk/news/video_and_audio/world/rss.xml</a></li>
+            <li><a href="#" class="test">https://xkcd.com/rss.xml</a></li>
           </ul>
-        </p>
+        </div>
       </div>
     </main>
 
     <div class="container">
+      <div class="row">
+        <div class="col-3">
+          <h4 class="text-center card">Channel</h4>
+        </div>
+
+        <div class="col-9">
+          <h4 class="text-center card">Articles</h4>
+        </div>
+      </div>
+      
       <div class="row">
         <div class="col-3">
           <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -48,6 +58,21 @@
           </div>
         </div>
       </div>
+
+      <div class="text-center" id="emptyNotice">
+        <br>
+        <br>
+        <br>
+        <h5>Sorry. You haven't add any feed yet.</h5>
+      </div>
     </div>
+
+    <script>
+      document.getElementsByClassName('lead')[0].addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('feedInput').value = e.target.innerText;
+        document.getElementById('feedInput').dispatchEvent(new Event('input'));
+      });
+    </script>
   </body>
 </html>
