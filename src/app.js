@@ -1,3 +1,4 @@
+import url from 'url';
 import _ from 'lodash';
 import { isURL } from 'validator';
 import loadFeed from './rss';
@@ -7,37 +8,41 @@ export default (_state) => {
   const input = document.getElementById('feedInput');
   const addButton = document.getElementById('addRSS');
 
-  const isURLValid = (url) => {
-    const isAdded = _.find(state.feeds, { link: url });
-    if (url === '' || isAdded || !isURL(url)) {
-      return false;
-    }
-    return true;
+  const isFeedAdded = (address) => {
+    const { protocol, hostname } = url.parse(address);
+    const link = url.format({ protocol, hostname, pathname: '/' });
+    return _.find(state.feeds, { link });
   };
 
   const handleValidateInput = ({ target }) => {
-    const url = target.value;
-    if (isURLValid(url)) {
+    const address = target.value;
+    if (address === '') {
+      state.isValidURL = false;
+      target.classList.remove('is-invalid');
+      return;
+    }
+    if (!isURL(address)) {
+      state.isValidURL = false;
+      target.classList.add('is-invalid');
+      return;
+    }
+    if (isFeedAdded(address)) {
+      state.isValidURL = false;
+      target.classList.add('is-invalid');
+    } else {
       state.isValidURL = true;
       target.classList.remove('is-invalid');
-    } else {
-      state.isValidURL = false;
-      if (url === '') {
-        target.classList.remove('is-invalid');
-      } else {
-        target.classList.add('is-invalid');
-      }
     }
   };
 
   const handleAddRSS = (event) => {
     event.preventDefault();
-    input.focus();
-
     if (state.isValidURL) {
       const feedURL = input.value;
+      addButton.setAttribute('disabled', 'disabled');
       loadFeed(state, feedURL);
       input.value = '';
+      input.focus();
       state.isValidURL = false;
     }
   };
