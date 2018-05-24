@@ -4,9 +4,7 @@ import run from './app';
 
 const state = {
   feeds: [],
-  input: {
-    isValid: false,
-  },
+  isValidAddress: false,
 };
 
 run(state);

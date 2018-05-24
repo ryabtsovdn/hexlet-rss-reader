@@ -1,31 +1,8 @@
 import axios from 'axios';
 import hashString from 'string-hash';
 import _ from 'lodash';
-import { createTab, createCard } from './elements';
-
-const replaceCDATA = str =>
-  str.replace('<![CDATA[', '').replace(']]>', '');
-
-const cleanDescription = str =>
-  str
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&apos;/g, "'")
-    .replace(/&quot;/g, '"')
-    .replace(/<\/img>/g, '');
-
-const getProp = (element, prop) =>
-  replaceCDATA(element.querySelector(prop).innerHTML);
-
-const renderFeed = (feed) => {
-  const { guid, title, description } = feed;
-  createTab(guid, title, description);
-};
-
-const renderItem = (feed, item) => {
-  createCard(feed, item);
-};
+import { renderFeed, renderItem } from './renderers';
+import { cleanDescription, getProp } from './utils';
 
 const addItem = (feed, feedItem) => {
   const title = getProp(feedItem, 'title');
