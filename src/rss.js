@@ -61,8 +61,8 @@ const loadFeed = (state, url) => {
       return addFeed(state, channel, url);
     })
     .then(feed => updateFeed(feed))
-    .catch(() => {
-      renderError();
+    .catch((err) => {
+      renderError(err);
     });
 };
 
