@@ -46,6 +46,9 @@ export default (_state) => {
   };
 
   const handleShowModal = ({ target }) => {
+    if (target.tagName !== 'A') {
+      return;
+    }
     const feedGuid = document.querySelector('.nav-link.active').id.replace('-tab', '');
     const itemGuid = target.dataset.item;
     const feed = _.find(state.feeds, { guid: parseInt(feedGuid, 10) });

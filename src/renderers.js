@@ -9,7 +9,7 @@ export const renderModal = (feedGuid, {
   title,
   description,
 }) => {
-  const modal = document.createElement('div');
+  const modal = document.getElementById('modal');
   modal.innerHTML = `<div class="modal fade show" id="${guid}modal" tabindex="-1" role="dialog" 
   aria-labelledby="${guid}modalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document"><div class="modal-content">
@@ -21,8 +21,6 @@ export const renderModal = (feedGuid, {
   onclick="window.open('${link}', '_blank'); return false;">Read more</button>
   <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
   </div></div></div></div>`;
-  const pane = document.getElementById(feedGuid);
-  pane.append(modal);
 };
 
 export const renderItems = (feed) => {

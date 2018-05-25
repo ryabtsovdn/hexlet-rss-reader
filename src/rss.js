@@ -3,10 +3,8 @@ import _ from 'lodash';
 import { renderFeed, renderItems, renderError } from './renderers';
 import parseRSS from './parsers';
 
-const isModalActive = ({ guid }) => {
-  const feedTab = document.querySelector(`[id='${guid}'] .modal.show`);
-  return feedTab;
-};
+const isModalActive = ({ guid }) =>
+  document.querySelector(`[id='${guid}'] .modal.show`);
 
 const addItems = (_feed, newItems) => {
   const feed = _feed;
