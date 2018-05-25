@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { renderFeed, renderItems, renderError } from './renderers';
 import parseRSS from './parsers';
 
+const addButton = document.getElementById('addRSS');
+
 const isModalActive = ({ guid }) =>
   document.querySelector(`[id='${guid}'] .modal.show`);
 
@@ -18,7 +20,7 @@ const addItems = (_feed, newItems) => {
 const addFeed = (feeds, newFeed) => {
   feeds.push(newFeed);
   renderFeed(newFeed);
-  document.getElementById('addRSS').removeAttribute('disabled');
+  addButton.removeAttribute('disabled');
 };
 
 const loadFeed = (feeds, feedURL, updateItemsOnly) => {
@@ -35,9 +37,8 @@ const loadFeed = (feeds, feedURL, updateItemsOnly) => {
       window.setTimeout(() => loadFeed(feeds, feedURL, true), 5000);
     })
     .catch((err) => {
-      /** */console.log(err);
       renderError(err);
-      document.getElementById('addRSS').removeAttribute('disabled');
+      addButton.removeAttribute('disabled');
     });
 };
 

@@ -19,6 +19,9 @@ const getItems = channel =>
 
 const parseRSS = (body, link) => {
   const xml = parser.parseFromString(body, 'text/xml');
+  if (xml.querySelector('parsererror')) {
+    throw new Error('Unsupportable content');
+  }
   const channel = xml.querySelector('channel');
   const guid = hashString(link);
   const title = getProp(channel, 'title');

@@ -1,7 +1,7 @@
 const createItemHTML = (link, guid, title) =>
-  `<div class="card" id="${guid}"><div class="card-body">
-  <a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" data-item="${guid}">${title}</a>
-  </div></div>`;
+  `<div class="card mb-2" id="${guid}"><div class="card-body pt-2 pb-1 text-center">
+  <h5><a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" 
+  data-item="${guid}">${title}</a></h5></div></div>`;
 
 export const renderModal = (feedGuid, {
   guid,
@@ -33,7 +33,7 @@ export const renderItems = (feed) => {
       description,
     }) => createItemHTML(link, guid, title, description))
     .reduce((acc, str) => `${acc}${str}`);
-  pane.innerHTML = `<h3 class="card text-center">${feed.description}</h3>${html}`;
+  pane.innerHTML = `<h4 class="card text-center">${feed.description}</h4>${html}`;
 };
 
 export const renderFeed = (feed) => {
@@ -58,9 +58,10 @@ export const renderFeed = (feed) => {
 };
 
 export const renderError = (err) => {
-  const errorMessage = err.response
-    ? 'Please, check if your feed address is correct.'
-    : 'Please, check the internet connection.';
+  const errorMessage = err.message
+    ? `${err.message}. Please, check if your feed address is correct.`
+    : 'Unable to receive the feed. Please, check the internet connection.';
+
   const errorElement = document.createElement('div');
   errorElement.innerHTML = `<div class="alert alert-warning alert-dismissible fade fixed-bottom show text-center" 
   role="alert"><strong>Unable to add this RSS feed!</strong> ${errorMessage}
