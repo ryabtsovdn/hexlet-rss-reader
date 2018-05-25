@@ -17,10 +17,9 @@ const getItems = channel =>
     };
   });
 
-const parse = (response) => {
-  const xml = parser.parseFromString(response.data.body, 'text/xml');
+const parseRSS = (body, link) => {
+  const xml = parser.parseFromString(body, 'text/xml');
   const channel = xml.querySelector('channel');
-  const link = getProp(channel, 'link');
   const guid = hashString(link);
   const title = getProp(channel, 'title');
   const description = getProp(channel, 'description');
@@ -34,4 +33,4 @@ const parse = (response) => {
   };
 };
 
-export default parse;
+export default parseRSS;

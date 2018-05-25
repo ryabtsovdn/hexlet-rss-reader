@@ -1,44 +1,44 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { renderFeed, renderItem, renderError } from './renderers';
-import parse from './parsers';
+import { renderFeed, renderItems, renderError } from './renderers';
+import parseRSS from './parsers';
 
-const addItems = (state, data) => {
-  const { guid: feedGuid, items: newItems } = data;
-  const feed = _.find(state.feeds, { guid: feedGuid });
-
-  newItems.forEach((newItem) => {
-    if (!_.find(feed.items, { guid: newItem.guid })) {
-      renderItem(feed, newItem);
-      feed.items.push(newItem);
-    }
-  });
+const isFeedActive = ({ guid }) => {
+  const feedTab = document.getElementById(`${guid}-tab`);
+  return feedTab.classList.contains('active');
 };
 
-const addFeed = (state, data) => {
-  state.feeds.push({
-    link: data.link,
-    guid: data.guid,
-    title: data.title,
-    description: data.description,
-    items: [],
-  });
-  renderFeed(data);
+const addItems = (_feed, newItems) => {
+  const feed = _feed;
+  const addingItems = _.filter(newItems, ({ guid }) => !_.find(feed.items, { guid }));
+  feed.items = [...feed.items, ...addingItems];
+  if (!_.isEmpty(addingItems) && !isFeedActive(feed)) {
+    renderItems(feed);
+  }
 };
 
-const loadFeed = (state, feedURL, isUpdate) => {
-  axios.get(`https://cors-proxy.htmldriven.com/?url=${feedURL}`)
+const addFeed = (feeds, newFeed) => {
+  feeds.push(newFeed);
+  renderFeed(newFeed);
+  document.getElementById('addRSS').removeAttribute('disabled');
+};
+
+const loadFeed = (feeds, feedURL, updateItemsOnly) => {
+  const requestURL = `https://cors-proxy.htmldriven.com/?url=${feedURL}`;
+  axios.get(requestURL)
     .then((response) => {
-      const data = parse(response);
-      if (!isUpdate) {
-        addFeed(state, data);
-        document.getElementById('addRSS').removeAttribute('disabled');
+      const newFeed = parseRSS(response.data.body, feedURL);
+      if (!updateItemsOnly) {
+        addFeed(feeds, newFeed);
+      } else {
+        const feed = _.find(feeds, { guid: newFeed.guid });
+        addItems(feed, newFeed.items);
       }
-      addItems(state, data);
-      window.setTimeout(() => loadFeed(state, feedURL, true), 5000);
+      window.setTimeout(() => loadFeed(feeds, feedURL, true), 5000);
     })
     .catch((err) => {
       renderError(err);
+      document.getElementById('addRSS').removeAttribute('disabled');
     });
 };
 
