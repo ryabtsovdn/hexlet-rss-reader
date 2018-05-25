@@ -3,16 +3,16 @@ import _ from 'lodash';
 import { renderFeed, renderItems, renderError } from './renderers';
 import parseRSS from './parsers';
 
-const isFeedActive = ({ guid }) => {
-  const feedTab = document.getElementById(`${guid}-tab`);
-  return feedTab.classList.contains('active');
+const isModalActive = ({ guid }) => {
+  const feedTab = document.querySelector(`[id='${guid}'] .modal.show`);
+  return feedTab;
 };
 
 const addItems = (_feed, newItems) => {
   const feed = _feed;
   const addingItems = _.filter(newItems, ({ guid }) => !_.find(feed.items, { guid }));
   feed.items = [...feed.items, ...addingItems];
-  if (!_.isEmpty(addingItems) && !isFeedActive(feed)) {
+  if (!_.isEmpty(addingItems) && !isModalActive(feed)) {
     renderItems(feed);
   }
 };

@@ -14,7 +14,6 @@ const createItemHTML = (link, guid, title, description) =>
   <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
   </div></div></div></div>`;
 
-
 export const renderItems = (feed) => {
   const pane = document.getElementById(feed.guid);
   const html = feed.items
