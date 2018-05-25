@@ -27,6 +27,7 @@
         <div class="lead">
           <ul>
             RSS feeds for testing (CLICK to ADD):
+            <li><a href="#" class="test">http://www.habrahabr.ru/rss/main/</a></li>
             <li><a href="#" class="test">http://lorem-rss.herokuapp.com/feed?unit=second&interval=30</a></li>
             <li><a href="#" class="test">http://rss.cnn.com/rss/cnn_topstories.rss</a></li>
             <li><a href="#" class="test">http://feeds.bbci.co.uk/news/video_and_audio/world/rss.xml</a></li>
@@ -68,6 +69,8 @@
         <h5>Sorry. You haven't added any feed yet.</h5>
       </div>
     </div>
+
+    <div class="loader fade" id="loader"></div>
 
     <script>
       document.getElementsByClassName('lead')[0].addEventListener('click', (e) => {

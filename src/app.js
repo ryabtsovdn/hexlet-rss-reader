@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { isURL } from 'validator';
 import loadFeed from './rss';
-import { renderModal } from './renderers';
+import { renderModal, renderToggleLoading } from './renderers';
 
 const isURLValid = (feeds, address) => {
   if (!isURL(address)) {
@@ -45,7 +45,7 @@ export default (_state) => {
     event.preventDefault();
     if (state.isValidURL) {
       const feedURL = input.value;
-      addButton.setAttribute('disabled', 'disabled');
+      renderToggleLoading();
       loadFeed(state.feeds, feedURL);
       input.value = '';
       input.focus();

@@ -1,9 +1,7 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { renderFeed, renderItems, renderError } from './renderers';
+import { renderFeed, renderItems, renderError, renderToggleLoading } from './renderers';
 import parseRSS from './parsers';
-
-const addButton = document.getElementById('addRSS');
 
 const isModalActive = ({ guid }) =>
   document.querySelector(`[id='${guid}'] .modal.show`);
@@ -20,7 +18,7 @@ const addItems = (_feed, newItems) => {
 const addFeed = (feeds, newFeed) => {
   feeds.push(newFeed);
   renderFeed(newFeed);
-  addButton.removeAttribute('disabled');
+  renderToggleLoading();
 };
 
 const loadFeed = (feeds, feedURL, updateItemsOnly) => {
@@ -38,7 +36,7 @@ const loadFeed = (feeds, feedURL, updateItemsOnly) => {
     })
     .catch((err) => {
       renderError(err);
-      addButton.removeAttribute('disabled');
+      renderToggleLoading();
     });
 };
 

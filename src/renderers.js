@@ -3,6 +3,19 @@ const createItemHTML = (link, guid, title) =>
   <h5><a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" 
   data-item="${guid}">${title}</a></h5></div></div>`;
 
+export const renderToggleLoading = () => {
+  const addButton = document.getElementById('addRSS');
+  const loader = document.getElementById('loader');
+
+  if (addButton.getAttribute('disabled')) {
+    addButton.removeAttribute('disabled');
+    loader.classList.remove('show');
+  } else {
+    addButton.setAttribute('disabled', 'disabled');
+    loader.classList.add('show');
+  }
+};
+
 export const renderModal = (feedGuid, {
   guid,
   link,
