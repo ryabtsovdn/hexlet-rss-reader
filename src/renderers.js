@@ -1,8 +1,16 @@
-const createItemHTML = (link, guid, title, description) =>
+const createItemHTML = (link, guid, title) =>
   `<div class="card" id="${guid}"><div class="card-body">
-  <a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal">${title}</a>
-  </div></div>
-  <div class="modal fade" id="${guid}modal" tabindex="-1" role="dialog" 
+  <a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" data-item="${guid}">${title}</a>
+  </div></div>`;
+
+export const renderModal = (feedGuid, {
+  guid,
+  link,
+  title,
+  description,
+}) => {
+  const modal = document.createElement('div');
+  modal.innerHTML = `<div class="modal fade show" id="${guid}modal" tabindex="-1" role="dialog" 
   aria-labelledby="${guid}modalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document"><div class="modal-content">
   <div class="modal-header"><h5 class="modal-title" id="${guid}modalLabel">${title}</h5>
@@ -13,6 +21,9 @@ const createItemHTML = (link, guid, title, description) =>
   onclick="window.open('${link}', '_blank'); return false;">Read more</button>
   <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
   </div></div></div></div>`;
+  const pane = document.getElementById(feedGuid);
+  pane.append(modal);
+};
 
 export const renderItems = (feed) => {
   const pane = document.getElementById(feed.guid);

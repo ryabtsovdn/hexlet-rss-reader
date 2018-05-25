@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { isURL } from 'validator';
 import loadFeed from './rss';
+import { renderModal } from './renderers';
 
 const isURLValid = (feeds, address) => {
   if (!isURL(address)) {
@@ -16,6 +17,7 @@ export default (_state) => {
   const state = _state;
   const input = document.getElementById('feedInput');
   const addButton = document.getElementById('addRSS');
+  const rootPane = document.getElementById('v-pills-tabContent');
 
   const handleValidateInput = ({ target }) => {
     const address = target.value;
@@ -43,6 +45,15 @@ export default (_state) => {
     }
   };
 
+  const handleShowModal = ({ target }) => {
+    const feedGuid = document.querySelector('.nav-link.active').id.replace('-tab', '');
+    const itemGuid = target.dataset.item;
+    const feed = _.find(state.feeds, { guid: parseInt(feedGuid, 10) });
+    const item = _.find(feed.items, { guid: parseInt(itemGuid, 10) });
+    renderModal(feedGuid, item);
+  };
+
   input.addEventListener('input', handleValidateInput);
   addButton.addEventListener('click', handleAddRSS);
+  rootPane.addEventListener('click', handleShowModal);
 };
