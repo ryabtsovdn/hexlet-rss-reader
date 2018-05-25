@@ -37,6 +37,7 @@ const loadFeed = (feeds, feedURL, updateItemsOnly) => {
       window.setTimeout(() => loadFeed(feeds, feedURL, true), 5000);
     })
     .catch((err) => {
+      /** */console.log(err);
       renderError(err);
       document.getElementById('addRSS').removeAttribute('disabled');
     });

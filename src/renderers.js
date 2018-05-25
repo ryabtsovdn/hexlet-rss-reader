@@ -24,11 +24,11 @@ export const renderItems = (feed) => {
       description,
     }) => createItemHTML(link, guid, title, description))
     .reduce((acc, str) => `${acc}${str}`);
-  pane.innerHTML = html;
+  pane.innerHTML = `<h3 class="card text-center">${feed.description}</h3>${html}`;
 };
 
 export const renderFeed = (feed) => {
-  const { guid, title, description } = feed;
+  const { guid, title } = feed;
   const rootTab = document.getElementById('v-pills-tab');
   const rootPane = document.getElementById('v-pills-tabContent');
   const isEmptyList = rootTab.children.length === 0;
@@ -37,9 +37,8 @@ export const renderFeed = (feed) => {
   <a class="nav-link${isEmptyList ? ' active show' : ''}" id="${guid}-tab" data-toggle="pill" 
   href="#${guid}" role="tab" aria-controls="guid" aria-selected="false">${title}</a>`;
 
-  rootPane.innerHTML = `${rootPane.innerHTML}
-  <div class="tab-pane fade${isEmptyList ? ' active show' : ''}" id="${guid}" role="tabpanel" 
-  aria-labelledby="${guid}-tab"><h3 class="card text-center">${description}</h3><hr></div>`;
+  rootPane.innerHTML = `${rootPane.innerHTML}<div class="tab-pane fade${isEmptyList ? ' active show' : ''}" id="${guid}"
+  role="tabpanel" aria-labelledby="${guid}-tab"></div>`;
 
   if (isEmptyList) {
     const empty = document.getElementById('emptyNotice');
