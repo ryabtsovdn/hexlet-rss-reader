@@ -2,14 +2,14 @@ import _ from 'lodash';
 import { isURL } from 'validator';
 import loadFeed from './rss';
 
-const isURLValid = (state, address) => {
+const isURLValid = (feeds, address) => {
   if (!isURL(address)) {
     return false;
   }
   const compareURLs = ({ link }) =>
     link.includes(address) || address.includes(link);
 
-  return _.filter(state.feeds, compareURLs).length === 0;
+  return _.filter(feeds, compareURLs).length === 0;
 };
 
 export default (_state) => {
@@ -22,7 +22,7 @@ export default (_state) => {
     if (address === '') {
       state.isValidURL = false;
       target.classList.remove('is-invalid');
-    } else if (isURLValid(state, address)) {
+    } else if (isURLValid(state.feeds, address)) {
       state.isValidURL = true;
       target.classList.remove('is-invalid');
     } else {
