@@ -33,7 +33,15 @@ export default (_state) => {
     }
   };
 
-  const handleAddRSS = (event) => {
+  const handleEnterKeyPress = (event) => {
+    if (event.key !== 'Enter') {
+      return;
+    }
+    addButton.click();
+    event.preventDefault();
+  };
+
+  const handleAddButtonClick = (event) => {
     event.preventDefault();
     if (state.isValidURL) {
       const feedURL = input.value;
@@ -57,6 +65,7 @@ export default (_state) => {
   };
 
   input.addEventListener('input', handleValidateInput);
-  addButton.addEventListener('click', handleAddRSS);
+  input.addEventListener('keydown', handleEnterKeyPress);
+  addButton.addEventListener('click', handleAddButtonClick);
   rootPane.addEventListener('click', handleShowModal);
 };
