@@ -2,6 +2,9 @@
 
 settings:
   import/resolver: webpack  # take all defaults 
+  import/ignore:
+    - \.coffee$          # fraught with parse errors
+    - \.(scss|less|css)$ # can't parse unprocessed CSS modules, either
 
 plugins:
   - jest
