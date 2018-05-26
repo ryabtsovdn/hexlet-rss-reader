@@ -1,5 +1,8 @@
 ---
 
+settings:
+  import/resolver: webpack  # take all defaults 
+
 plugins:
   - jest
   - babel
