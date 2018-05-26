@@ -1,9 +1,7 @@
 ---
 
 settings:
-  import/resolver:
-    webpack:
-      config: 'webpack.config.js'
+  import/no-unresolved: off
 
 plugins:
   - jest
