@@ -9,7 +9,7 @@ export const cleanDescription = str =>
     .replace(/&apos;/g, "'")
     .replace(/&quot;/g, '"')
     .replace(/<\/img>/g, '')
-    .replace(/<img(.*)>/g, '<img class="mw-100" $1>');
+    .replace(/<img(.*)>/g, '<img class="mw-100 mx-auto d-block" $1>');
 
 export const getProp = (element, prop) =>
   replaceCDATA(element.querySelector(prop).innerHTML);

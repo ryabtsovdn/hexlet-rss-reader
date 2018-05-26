@@ -1,6 +1,6 @@
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './style.css';
+import './assets/style.scss';
 import run from './app';
 
 const state = {

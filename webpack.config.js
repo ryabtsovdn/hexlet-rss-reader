@@ -17,10 +17,31 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          devMode ? 'style-loader!css-loader' : MiniCssExtractPlugin.loader,
-          'css-loader',
-        ],
+        use: devMode
+          ? [
+            'style-loader',
+            'css-loader',
+          ]
+          : [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'postcss-loader',
+          ],
+      },
+      {
+        test: /\.scss$/,
+        use: devMode ?
+          [
+            'style-loader',
+            'css-loader',
+            'sass-loader',
+          ] :
+          [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'sass-loader',
+            'postcss-loader',
+          ],
       },
     ],
   },
