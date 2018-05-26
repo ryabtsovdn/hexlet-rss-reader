@@ -1,8 +1,5 @@
 ---
 
-settings:
-  import/no-unresolved: off
-
 plugins:
   - jest
   - babel
@@ -20,3 +17,4 @@ extends:
 
 rules:
   no-console: 0
+  import/no-unresolved: off
