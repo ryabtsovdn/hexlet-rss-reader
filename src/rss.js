@@ -21,8 +21,10 @@ const addFeed = (feeds, newFeed) => {
   renderToggleLoading();
 };
 
+const corsURL = 'https://cors-proxy.htmldriven.com/?url=';
+
 const loadFeed = (feeds, feedURL, updateItemsOnly) => {
-  const requestURL = `https://cors-proxy.htmldriven.com/?url=${feedURL}`;
+  const requestURL = `${corsURL}${feedURL}`;
   axios.get(requestURL)
     .then((response) => {
       const newFeed = parseRSS(response.data.body, feedURL);

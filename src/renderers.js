@@ -56,7 +56,7 @@ export const renderFeed = (feed) => {
   const isEmptyList = rootTab.children.length === 0;
 
   rootTab.innerHTML = `${rootTab.innerHTML}
-  <a class="nav-link${isEmptyList ? ' active show' : ''}" id="${guid}-tab" data-toggle="pill" 
+  <a class="nav-link${isEmptyList ? ' active show' : ''}" id="${guid}-tab" data-guid="${guid}" data-toggle="pill" 
   href="#${guid}" role="tab" aria-controls="guid" aria-selected="false">${title}</a>`;
 
   rootPane.innerHTML = `${rootPane.innerHTML}<div class="tab-pane fade${isEmptyList ? ' active show' : ''}" id="${guid}"

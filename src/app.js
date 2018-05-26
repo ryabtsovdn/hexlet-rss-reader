@@ -53,11 +53,11 @@ export default (_state) => {
     }
   };
 
-  const handleShowModal = ({ target }) => {
+  const handleClickArticleLink = ({ target }) => {
     if (target.tagName !== 'A') {
       return;
     }
-    const feedGuid = document.querySelector('.nav-link.active').id.replace('-tab', '');
+    const feedGuid = document.querySelector('.nav-link.active').dataset.guid;
     const itemGuid = target.dataset.item;
     const feed = _.find(state.feeds, { guid: parseInt(feedGuid, 10) });
     const item = _.find(feed.items, { guid: parseInt(itemGuid, 10) });
@@ -67,5 +67,5 @@ export default (_state) => {
   input.addEventListener('input', handleValidateInput);
   input.addEventListener('keydown', handleEnterKeyPress);
   addButton.addEventListener('click', handleAddButtonClick);
-  rootPane.addEventListener('click', handleShowModal);
+  rootPane.addEventListener('click', handleClickArticleLink);
 };
