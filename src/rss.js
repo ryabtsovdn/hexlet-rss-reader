@@ -18,27 +18,33 @@ const addItems = (_feed, newItems) => {
 const addFeed = (feeds, newFeed) => {
   feeds.push(newFeed);
   renderFeed(newFeed);
-  renderToggleLoading();
 };
 
 const corsURL = 'https://cors-proxy.htmldriven.com/?url=';
 
-const loadFeed = (feeds, feedURL, updateItemsOnly) => {
+export const toggleLoading = (_state) => {
+  const state = _state;
+  state.isLoading = !state.isLoading;
+  renderToggleLoading(state.isLoading);
+};
+
+export const loadFeed = (state, feedURL, updateItemsOnly) => {
   const requestURL = `${corsURL}${feedURL}`;
   axios.get(requestURL)
     .then((response) => {
       const newFeed = parseRSS(response.data.body, feedURL);
       if (!updateItemsOnly) {
-        addFeed(feeds, newFeed);
+        addFeed(state.feeds, newFeed);
+        toggleLoading(state);
       } else {
-        const feed = _.find(feeds, { guid: newFeed.guid });
+        const feed = _.find(state.feeds, { guid: newFeed.guid });
         addItems(feed, newFeed.items);
       }
-      window.setTimeout(() => loadFeed(feeds, feedURL, true), 5000);
+      window.setTimeout(() => loadFeed(state, feedURL, true), 5000);
     })
     .catch((err) => {
+      toggleLoading(state);
       renderError(err);
-      renderToggleLoading();
     });
 };
 

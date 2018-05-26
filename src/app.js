@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { isURL } from 'validator';
-import loadFeed from './rss';
-import { renderModal, renderToggleLoading } from './renderers';
+import { loadFeed, toggleLoading } from './rss';
+import { renderModal } from './renderers';
 
 const isURLValid = (feeds, address) => {
   if (!isURL(address)) {
@@ -45,8 +45,8 @@ export default (_state) => {
     event.preventDefault();
     if (state.isValidURL) {
       const feedURL = input.value;
-      renderToggleLoading();
-      loadFeed(state.feeds, feedURL);
+      toggleLoading(state);
+      loadFeed(state, feedURL);
       input.value = '';
       input.focus();
       state.isValidURL = false;

@@ -1,18 +1,18 @@
+const addButton = document.getElementById('addRSS');
+const loader = document.getElementById('loader');
+
 const createItemHTML = (link, guid, title) =>
   `<div class="card mb-2" id="${guid}"><div class="card-body pt-2 pb-1 text-center">
   <h5><a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" 
   data-item="${guid}">${title}</a></h5></div></div>`;
 
-export const renderToggleLoading = () => {
-  const addButton = document.getElementById('addRSS');
-  const loader = document.getElementById('loader');
-
-  if (addButton.getAttribute('disabled')) {
-    addButton.removeAttribute('disabled');
-    loader.classList.remove('show');
-  } else {
+export const renderToggleLoading = (isLoading) => {
+  if (isLoading) {
     addButton.setAttribute('disabled', 'disabled');
     loader.classList.add('show');
+  } else {
+    addButton.removeAttribute('disabled');
+    loader.classList.remove('show');
   }
 };
 

@@ -6,6 +6,7 @@ import run from './app';
 const state = {
   feeds: [],
   isValidURL: false,
+  isLoading: false,
 };
 
 run(state);
