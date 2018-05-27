@@ -1,3 +1,4 @@
+const input = document.getElementById('feedInput');
 const addButton = document.getElementById('addRSS');
 const loader = document.getElementById('loader');
 
@@ -6,7 +7,10 @@ const createItemHTML = (link, guid, title) =>
   <h5><a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" 
   data-item="${guid}">${title}</a></h5></div></div>`;
 
-export const renderToggleLoading = (isLoading) => {
+export const renderValid = isValid =>
+  input.classList[isValid ? 'remove' : 'add']('is-invalid');
+
+export const renderLoading = (isLoading) => {
   if (isLoading) {
     addButton.setAttribute('disabled', 'disabled');
     loader.classList.add('show');
@@ -14,6 +18,12 @@ export const renderToggleLoading = (isLoading) => {
     addButton.removeAttribute('disabled');
     loader.classList.remove('show');
   }
+};
+
+export const clearInput = () => {
+  renderValid(true);
+  input.value = '';
+  input.focus();
 };
 
 export const renderModal = (feedGuid, {

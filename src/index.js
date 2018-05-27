@@ -1,12 +1,6 @@
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/style.scss';
-import run from './app';
+import run from './rss';
 
-const state = {
-  feeds: [],
-  isValidURL: false,
-  isLoading: false,
-};
-
-run(state);
+run();

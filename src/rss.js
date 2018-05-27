@@ -1,7 +1,14 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { renderFeed, renderItems, renderError, renderToggleLoading } from './renderers';
+import { renderFeed, renderItems, renderError, renderLoading } from './view';
 import parseRSS from './parsers';
+import init from './app';
+
+const state = {
+  feeds: [],
+  isValidURL: false,
+  isLoading: false,
+};
 
 const isModalActive = ({ guid }) =>
   document.querySelector(`[id='${guid}'] .modal.show`);
@@ -20,32 +27,35 @@ const addFeed = (feeds, newFeed) => {
   renderFeed(newFeed);
 };
 
-const corsURL = 'https://cors-proxy.htmldriven.com/?url=';
-
-export const toggleLoading = (_state) => {
-  const state = _state;
-  state.isLoading = !state.isLoading;
-  renderToggleLoading(state.isLoading);
+export const setValidState = (isValidURL) => {
+  state.isValidURL = isValidURL;
 };
 
-export const loadFeed = (state, feedURL, updateItemsOnly) => {
+export const toggleLoadingState = () => {
+  state.isLoading = !state.isLoading;
+  renderLoading(state.isLoading);
+};
+
+const corsURL = 'https://cors-proxy.htmldriven.com/?url=';
+
+export const loadFeed = (feedURL, updateItemsOnly) => {
   const requestURL = `${corsURL}${feedURL}`;
   axios.get(requestURL)
     .then((response) => {
       const newFeed = parseRSS(response.data.body, feedURL);
       if (!updateItemsOnly) {
         addFeed(state.feeds, newFeed);
-        toggleLoading(state);
+        toggleLoadingState();
       } else {
         const feed = _.find(state.feeds, { guid: newFeed.guid });
         addItems(feed, newFeed.items);
       }
-      window.setTimeout(() => loadFeed(state, feedURL, true), 5000);
+      window.setTimeout(() => loadFeed(feedURL, true), 5000);
     })
     .catch((err) => {
-      toggleLoading(state);
+      toggleLoadingState();
       renderError(err);
     });
 };
 
-export default loadFeed;
+export default () => init(state);

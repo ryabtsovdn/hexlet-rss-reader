@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { isURL } from 'validator';
-import { loadFeed, toggleLoading } from './rss';
-import { renderModal } from './renderers';
+import { loadFeed, setValidState, toggleLoadingState } from './rss';
+import { renderModal, renderValid, clearInput } from './view';
 
 const isURLValid = (feeds, address) => {
   if (!isURL(address)) {
@@ -21,15 +21,11 @@ export default (_state) => {
 
   const handleValidateInput = ({ target }) => {
     const address = target.value;
+    setValidState(isURLValid(state.feeds, address));
     if (address === '') {
-      state.isValidURL = false;
-      target.classList.remove('is-invalid');
-    } else if (isURLValid(state.feeds, address)) {
-      state.isValidURL = true;
-      target.classList.remove('is-invalid');
+      renderValid(true);
     } else {
-      state.isValidURL = false;
-      target.classList.add('is-invalid');
+      renderValid(state.isValidURL);
     }
   };
 
@@ -45,11 +41,10 @@ export default (_state) => {
     event.preventDefault();
     if (state.isValidURL) {
       const feedURL = input.value;
-      toggleLoading(state);
-      loadFeed(state, feedURL);
-      input.value = '';
-      input.focus();
-      state.isValidURL = false;
+      toggleLoadingState();
+      clearInput();
+      setValidState(false);
+      loadFeed(feedURL);
     }
   };
 

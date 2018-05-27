@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>RSS Reader</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body class="pt-5">
     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
@@ -27,11 +27,11 @@
         <div class="lead">
           <ul>
             RSS feeds for testing (CLICK to ADD):
-            <li><a href="#" class="test">http://www.habrahabr.ru/rss/main/</a></li>
-            <li><a href="#" class="test">http://lorem-rss.herokuapp.com/feed?unit=second&interval=30</a></li>
-            <li><a href="#" class="test">http://rss.cnn.com/rss/cnn_topstories.rss</a></li>
-            <li><a href="#" class="test">http://feeds.bbci.co.uk/news/video_and_audio/world/rss.xml</a></li>
-            <li><a href="#" class="test">https://xkcd.com/rss.xml</a></li>
+            <li><a href="#" class="test-link">http://www.habrahabr.ru/rss/main/</a></li>
+            <li><a href="#" class="test-link">http://lorem-rss.herokuapp.com/feed?unit=second&interval=30</a></li>
+            <li><a href="#" class="test-link">http://rss.cnn.com/rss/cnn_topstories.rss</a></li>
+            <li><a href="#" class="test-link">http://feeds.bbci.co.uk/news/video_and_audio/world/rss.xml</a></li>
+            <li><a href="#" class="test-link">https://xkcd.com/rss.xml</a></li>
           </ul>
         </div>
       </div>
@@ -73,11 +73,13 @@
     <div class="loader fade" id="loader"></div>
 
     <script>
-      document.getElementsByClassName('lead')[0].addEventListener('click', (e) => {
+      const testLinks = document.querySelectorAll('.test-link');
+      const handleTestClick = (e) => {
         e.preventDefault();
         document.getElementById('feedInput').value = e.target.innerText;
         document.getElementById('feedInput').dispatchEvent(new Event('input'));
-      });
+      };
+      [...testLinks].forEach(link => link.addEventListener('click', handleTestClick));
     </script>
   </body>
 </html>

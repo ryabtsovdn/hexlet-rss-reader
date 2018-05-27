@@ -1,7 +1,7 @@
 const path = require('path');
 
 const config = {
-  content: path.join(__dirname, 'src'),
+  content: path.resolve(__dirname, 'src'),
   hot: {
     hot: true,
   },
