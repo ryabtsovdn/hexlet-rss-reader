@@ -2,6 +2,9 @@ const input = document.getElementById('feedInput');
 const addButton = document.getElementById('addRSS');
 const loader = document.getElementById('loader');
 
+export const isModalActive = ({ guid }) =>
+  document.querySelector(`[id='${guid}'] .modal.show`);
+
 export const renderValid = isValid =>
   input.classList[isValid ? 'remove' : 'add']('is-invalid');
 

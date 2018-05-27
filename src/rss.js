@@ -1,6 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { renderFeed, renderItems, renderError, renderLoading } from './view';
+import { renderFeed, renderItems, renderError, renderLoading, isModalActive } from './view';
 import parseRSS from './parsers';
 import init from './app';
 
@@ -9,9 +9,6 @@ const state = {
   isValidURL: false,
   isLoading: false,
 };
-
-const isModalActive = ({ guid }) =>
-  document.querySelector(`[id='${guid}'] .modal.show`);
 
 const addItems = (_feed, newItems) => {
   const feed = _feed;

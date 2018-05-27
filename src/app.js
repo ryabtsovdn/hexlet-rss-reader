@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { isURL } from 'validator';
 import { loadFeed, setValidState, toggleLoadingState } from './rss';
-import { /* renderModal, */ renderValid, clearInput } from './view';
+import { renderValid, clearInput } from './view';
 
 const isURLValid = (feeds, address) => {
   if (!isURL(address)) {
