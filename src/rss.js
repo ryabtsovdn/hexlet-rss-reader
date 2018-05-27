@@ -36,25 +36,43 @@ export const toggleLoadingState = () => {
   renderLoading(state.isLoading);
 };
 
+const handleLoadingError = (err) => {
+  toggleLoadingState();
+  renderError(err);
+};
+
 const corsURL = 'https://cors-proxy.htmldriven.com/?url=';
 
-export const loadFeed = (feedURL, updateItemsOnly) => {
+const fetchFeed = (feedURL) => {
   const requestURL = `${corsURL}${feedURL}`;
-  axios.get(requestURL)
-    .then((response) => {
-      const newFeed = parseRSS(response.data.body, feedURL);
-      if (!updateItemsOnly) {
-        addFeed(state.feeds, newFeed);
-        toggleLoadingState();
-      } else {
-        const feed = _.find(state.feeds, { guid: newFeed.guid });
-        addItems(feed, newFeed.items);
-      }
-      window.setTimeout(() => loadFeed(feedURL, true), 5000);
+  return axios.get(requestURL)
+    .then(response => response.data.body);
+};
+
+const updateFeed = (feedUrl) => {
+  fetchFeed(feedUrl)
+    .then((xml) => {
+      const { guid, items } = parseRSS(xml, feedUrl);
+      const feed = _.find(state.feeds, { guid });
+      addItems(feed, items);
+      window.setTimeout(() => updateFeed(feedUrl), 5000);
     })
     .catch((err) => {
+      handleLoadingError(err);
+    });
+};
+
+export const loadFeed = (feedUrl) => {
+  fetchFeed(feedUrl)
+    .then((xml) => {
+      const newFeed = parseRSS(xml, feedUrl);
+      const { feeds } = state;
+      addFeed(feeds, newFeed);
       toggleLoadingState();
-      renderError(err);
+      window.setTimeout(() => updateFeed(feedUrl), 5000);
+    })
+    .catch((err) => {
+      handleLoadingError(err);
     });
 };
 

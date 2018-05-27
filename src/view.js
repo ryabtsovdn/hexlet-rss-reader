@@ -13,11 +13,10 @@ export const renderValid = isValid =>
 export const renderLoading = (isLoading) => {
   if (isLoading) {
     addButton.setAttribute('disabled', 'disabled');
-    loader.classList.add('show');
   } else {
     addButton.removeAttribute('disabled');
-    loader.classList.remove('show');
   }
+  loader.classList[isLoading ? 'add' : 'remove']('show');
 };
 
 export const clearInput = () => {
