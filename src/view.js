@@ -2,11 +2,6 @@ const input = document.getElementById('feedInput');
 const addButton = document.getElementById('addRSS');
 const loader = document.getElementById('loader');
 
-const createItemHTML = (link, guid, title) =>
-  `<div class="card mb-2" id="${guid}"><div class="card-body pt-2 pb-1 text-center">
-  <h5><a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" 
-  data-item="${guid}">${title}</a></h5></div></div>`;
-
 export const renderValid = isValid =>
   input.classList[isValid ? 'remove' : 'add']('is-invalid');
 
@@ -25,7 +20,7 @@ export const clearInput = () => {
   input.focus();
 };
 
-export const renderModal = (feedGuid, {
+export const renderModal = ({
   guid,
   link,
   title,
@@ -45,17 +40,27 @@ export const renderModal = (feedGuid, {
   </div></div></div></div>`;
 };
 
-export const renderItems = (feed) => {
-  const pane = document.getElementById(feed.guid);
-  const html = feed.items
-    .map(({
-      link,
-      guid,
-      title,
-      description,
-    }) => createItemHTML(link, guid, title, description))
-    .reduce((acc, str) => `${acc}${str}`);
-  pane.innerHTML = `<h4 class="card text-center">${feed.description}</h4>${html}`;
+const createItemElement = (item) => {
+  const {
+    guid,
+    title,
+  } = item;
+  const itemElement = document.createElement('div');
+  itemElement.className = 'card mb-2';
+  itemElement.setAttribute('id', `${guid}`);
+  itemElement.innerHTML = `<div class="card-body pt-2 pb-1 text-center">
+  <h5><a class="card-title" href="#" data-toggle="modal" data-target="#${guid}modal" 
+  data-item="${guid}">${title}</a></h5></div>`;
+  itemElement.onclick = () => renderModal(item);
+  return itemElement;
+};
+
+export const renderItems = ({ guid, description, items }) => {
+  const pane = document.getElementById(guid);
+  pane.innerHTML = `<h4 class="card text-center">${description}</h4>`;
+  items
+    .map(item => createItemElement(item))
+    .forEach(element => pane.appendChild(element));
 };
 
 export const renderFeed = (feed) => {
