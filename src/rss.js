@@ -1,5 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
+import normalize from 'normalize-url';
 import { renderFeed, renderItems, renderError, renderLoading, isModalActive } from './view';
 import parseRSS from './parsers';
 import init from './app';
@@ -38,12 +39,12 @@ const handleLoadingError = (err) => {
   renderError(err);
 };
 
-const corsURL = 'https://cors-proxy.htmldriven.com/?url=';
+const corsURL = 'https://cors-anywhere.herokuapp.com/';
 
 const fetchFeed = (feedURL) => {
-  const requestURL = `${corsURL}${feedURL}`;
+  const requestURL = `${corsURL}${normalize(feedURL)}`;
   return axios.get(requestURL)
-    .then(response => response.data.body);
+    .then(response => response.data);
 };
 
 const updateFeed = (feedUrl) => {
@@ -52,7 +53,7 @@ const updateFeed = (feedUrl) => {
       const { guid, items } = parseRSS(xml, feedUrl);
       const feed = _.find(state.feeds, { guid });
       addItems(feed, items);
-      window.setTimeout(() => updateFeed(feedUrl), 5000);
+      window.setTimeout(() => updateFeed(feedUrl), 15000);
     })
     .catch((err) => {
       handleLoadingError(err);
@@ -66,7 +67,7 @@ export const loadFeed = (feedUrl) => {
       const { feeds } = state;
       addFeed(feeds, newFeed);
       toggleLoadingState();
-      window.setTimeout(() => updateFeed(feedUrl), 5000);
+      window.setTimeout(() => updateFeed(feedUrl), 15000);
     })
     .catch((err) => {
       handleLoadingError(err);
